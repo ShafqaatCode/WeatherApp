@@ -30,31 +30,50 @@ const apiKey = "a1815d424d2e2f7cafb009b034c91ad6";
             }
 
         }
+  // function fetchWeather(city = null, lat = null, lon = null) {
+  //           let url;
 
+  //           if (city) {
+  //               url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+  //           }
+  //           else {
+  //               url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+  //           }
+  //           fetch(url)
+  //               .then(response => response.json())
+  //               .then(data => {
+  //                   if (data.cod !== 200) {
+  //                       alert("City not found")
+  //                       return;
+  //                   }
+  //                   displayWeather(data);
+  //               })
+  //               .catch(error => console.error("Error Fetching weather", error));
+  // }
+        async function fetchWeather(city = null, lat = null, lon = null) {
+    if (city) {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    }
+    else {
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+    }
 
-        function fetchWeather(city = null, lat = null, lon = null) {
-            let url;
-
-            if (city) {
-                url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-            }
-            else {
-                url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
-            }
-
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.cod !== 200) {
-                        alert("City not found")
-                        return;
-                    }
-                    displayWeather(data);
-                })
-                .catch(error => console.error("Error Fetching weather", error));
-
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "City not found")
         }
+        displayWeather(data);
+
+    }
+    catch (error) {
+        console.error("Error fetching weather", error);
+        alert(error.message)
+    }
+
+}
+
 
         function displayWeather(data) {
 
